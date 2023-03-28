@@ -1,5 +1,9 @@
 <template>
-  <a-table :dataSource="userList" :columns="userListColumns">
+  <a-table
+    :dataSource="userList"
+    :columns="userListColumns"
+    :loading="tabLoading"
+  >
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'action'">
         <span>
@@ -12,9 +16,10 @@
 
 <script setup>
 import { useRouter } from "vue-router";
-import { onMounted, ref } from "vue";
-import { getUserList } from "../http/http";
+import { onMounted, ref, inject } from "vue";
+import { getUserList } from "../../../http/http";
 const router = useRouter();
+const { upQx } = inject("qx");
 onMounted(() => {
   getUserLists();
 });
@@ -42,19 +47,24 @@ let userListColumns = [
     key: "action",
   },
 ];
+const tabLoading = ref(true);
 function getUserLists() {
   getUserList().then((req) => {
-    userList.value = req.data.data;
+    if (req.data.code === 1) {
+      userList.value = req.data.data;
+      tabLoading.value = false;
+    } else {
+      upQx();
+    }
   });
 }
 
 // 路由跳转
 function toDetail(id, key) {
   router.push({
-    name: "userDetail",
-    params: { userID: id, userKey: key },
+    path: "/Home/userDetail",
+    query: { userID: id, userKey: key },
   });
-
 }
 </script>
 

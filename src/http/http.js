@@ -1,6 +1,6 @@
 import axios from 'axios';
 export const api = import.meta.env.VITE_APP_URL
-
+axios.defaults.withCredentials = true
 // 获取浏览日志
 export async function getUserLog(userKey) {
     return await axios.post(`${api}/getUserLog`, { userKey })
@@ -33,7 +33,23 @@ export async function getMdData(path) {
 export async function getAdminImg(imgKey, userKey) {
     return await axios.post(`${api}/getAdminImg`, { imgKey, userKey })
 }
+
 // 注册
 export async function register(username, password, code) {
     return await axios.post(`${api}/register`, { username, password, code })
+}
+
+// 验证
+export async function getCookieType() {
+    return await axios.post(`${api}/cookieType`)
+}
+
+// 获取验证码
+export async function getCode(username) {
+    return await axios.post(`${api}/getCode`, { username })
+}
+
+// 设置session
+export async function setSession() {
+    return await axios.get(`${api}/session`)
 }

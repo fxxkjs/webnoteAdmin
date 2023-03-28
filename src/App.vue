@@ -1,8 +1,21 @@
 <script setup>
-// import { RouterLink, RouterView } from "vue-router";
-
-import Nav from "./components/Nav.vue";
 import Header from "./components/Header.vue";
+import { provide, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
+const qx = ref(false);
+function upQx(b = false) {
+  qx.value = b;
+}
+provide("qx", { qx, upQx });
+router.beforeEach((to, from) => {
+  if (to.path !== "/" && qx.value === false) {
+    router.push({
+      path: "/",
+    });
+  }
+});
 </script>
 
 <template>
@@ -13,15 +26,11 @@ import Header from "./components/Header.vue";
           <Header />
         </a-layout-header>
         <a-layout>
-          <a-layout-sider id="nav">
-            <Nav />
-          </a-layout-sider>
-          <a-layout-content id="content">
-            <RouterView class="wh100"></RouterView>
-          </a-layout-content>
+          <RouterView></RouterView>
         </a-layout>
       </a-layout>
     </div>
+    <a id="ICP" href="https://beian.miit.gov.cn/">豫ICP备20014783号-1</a>
   </div>
 </template>
 
@@ -35,6 +44,7 @@ import Header from "./components/Header.vue";
   display: flex;
   justify-content: center;
   align-items: center;
+
   & > div {
     width: calc(100% - 80px);
     height: calc(100% - 80px);
@@ -44,16 +54,12 @@ import Header from "./components/Header.vue";
     align-items: center;
   }
 }
-.ant-layout,
-.ant-layout-header,
-.ant-layout-sider {
-  background: rgba(255, 255, 255, 0.8);
-}
 
 #header {
-  border-bottom: 1px solid #eee;
+  // border-bottom: 1px solid #eee;
   padding: 0 20px;
 }
+
 #main {
   padding: 15px;
   height: 100%;
@@ -63,10 +69,18 @@ import Header from "./components/Header.vue";
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 8px 15px 4px #ececec;
 }
+
 #nav {
   border-right: 1px solid #eee;
 }
+
 #content {
   padding: 10px 10px;
+}
+#ICP {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+  color: #507ea2;
 }
 </style>

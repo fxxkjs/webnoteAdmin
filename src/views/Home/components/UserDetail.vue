@@ -5,6 +5,7 @@
         <a-table
           :dataSource="tableData.marks"
           :columns="tableData.marksColumns"
+          :loading="tableData.marksLod"
         >
         </a-table>
       </a-tab-pane>
@@ -13,6 +14,7 @@
         <a-table
           :dataSource="tableData.logon"
           :columns="tableData.logonColumns"
+          :loading="tableData.logonLod"
         >
         </a-table>
       </a-tab-pane>
@@ -21,6 +23,7 @@
         <a-table
           :dataSource="tableData.imglist"
           :columns="tableData.imglistColumns"
+          :loading="tableData.imglistLod"
         >
           <template #bodyCell="{ column, record }">
             <template v-if="column.key === 'show'">
@@ -43,20 +46,28 @@
       </template>
     </a-tabs>
 
-    <ShowImg v-model:visible="imageVisible" :imgkey="imgkey" :userKey="userKey" />
+    <ShowImg
+      v-model:visible="imageVisible"
+      :imgkey="imgkey"
+      :userKey="userKey"
+    />
   </div>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
-import ShowImg from "./Showimg.vue";
-import { getUserLog, getUserSignInLog, getUserImgList } from "../http/http";
+import { ref, onMounted, inject } from "vue";
+import ShowImg from "../../../components/ShowImg.vue";
+import {
+  getUserLog,
+  getUserSignInLog,
+  getUserImgList,
+} from "../../../http/http";
+const { upQx } = inject("qx");
 const route = useRoute();
 const router = useRouter();
-console.log(route)
-let userName = route.params.userID;
-let userKey = route.params.userKey
+let userName = route.query.userID;
+let userKey = route.query.userKey;
 // 获取默认数据
 onMounted(() => {
   getLog(userKey);
@@ -66,7 +77,7 @@ onMounted(() => {
 // Tabs
 const activeKey = ref("1");
 function back() {
-  router.push({ path: "/" });
+  router.go(-1);
 }
 
 // 表格数据
@@ -74,6 +85,9 @@ let tableData = ref({
   marks: [],
   logon: [],
   imglist: [],
+  marksLod: true,
+  logonLod: true,
+  imglistLod: true,
   marksColumns: [
     {
       title: "访问时间",
@@ -138,8 +152,11 @@ const showImage = (key) => {
 // 浏览记录
 function getLog(userKey) {
   getUserLog(userKey).then((req) => {
-    if (req.data.code) {
+    if (req.data.code === 1) {
       tableData.value.marks = req.data.data;
+      tableData.value.marksLod = false;
+    } else {
+      upQx();
     }
   });
 }
@@ -147,8 +164,11 @@ function getLog(userKey) {
 // 登录记录
 function getSignInLog(userKey) {
   getUserSignInLog(userKey).then((req) => {
-    if (req.data.code) {
+    if (req.data.code === 1) {
       tableData.value.logon = req.data.data;
+      tableData.value.logonLod = false;
+    } else {
+      upQx();
     }
   });
 }
@@ -156,7 +176,12 @@ function getSignInLog(userKey) {
 // 图片列表
 function getImgList(userKey) {
   getUserImgList(userKey).then((req) => {
-    tableData.value.imglist = req.data.data;
+    if (req.data.code === 1) {
+      tableData.value.imglist = req.data.data;
+      tableData.value.imglistLod = false;
+    } else {
+      upQx();
+    }
   });
 }
 </script>

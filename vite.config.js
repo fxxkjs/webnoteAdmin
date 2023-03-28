@@ -24,5 +24,8 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/getAdminImg/, '/getAdminImg'),
       },
     }
+  },
+  build:{
+    outDir:"../webnoteServer/admin"
   }
 })

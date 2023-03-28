@@ -3,7 +3,7 @@
     <div class="imgBox" @click="close" :class="[imgVisible ? '' : 'none']">
       <a-spin size="large" :spinning="spinning"> </a-spin>
       <div class="imginner">
-        <img id="img" :src="imgurl" @load="imgOk" />
+        <img id="img" :src="imgurl" contain />
       </div>
     </div>
   </Teleport>
@@ -11,16 +11,21 @@
 <script setup>
 import { ref, computed, onUpdated } from "vue";
 import { getAdminImg } from "../http/http";
-
-
+import { message } from "ant-design-vue";
 onUpdated(() => {
   if (imgurl.value === "" && imgVisible.value) {
     getAdminImg(props.imgkey, props.userKey).then((req) => {
-      imgurl.value = req.data.data
+      if (req.data.code === 1) {
+        imgurl.value = req.data.data;
+        spinning.value = false;
+      } else {
+        close();
+        message.warning(req.data.msg, 7);
+      }
     });
   }
 });
-const imgurl = ref("")
+const imgurl = ref("");
 const emit = defineEmits();
 const spinning = ref(true);
 const props = defineProps({
@@ -43,16 +48,13 @@ const imgVisible = computed({
   },
   set(v) {
     emit("update:visible", v);
-
   },
 });
 
-function imgOk() {
-  spinning.value = false;
-}
 function close() {
   imgVisible.value = false;
-  imgurl.value = ""
+  spinning.value = true;
+  imgurl.value = "";
 }
 </script>
 <style scoped lang="less">
@@ -66,6 +68,10 @@ function close() {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+#img {
+  max-width: 100%;
+  max-height: calc(100vh);
 }
 
 .none {

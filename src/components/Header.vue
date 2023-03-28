@@ -3,7 +3,7 @@
 <template>
   <div id="header">
     <div id="logo"><img src="../assets/fontLogo.png" alt="webnote.logo" /></div>
-    <div id="avatar">admin</div>
+    <!-- <div id="avatar">admin</div> -->
   </div>
 </template>
 
@@ -16,9 +16,9 @@
     #logo {
       height: 20px;
     }
-    #avatar {
-      border: 1px solid #eee;
-    }
+    // #avatar {
+    //   // border: 1px solid #eee;
+    // }
   }
 }
 </style>

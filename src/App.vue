@@ -4,13 +4,14 @@ import { provide, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
-const qx = ref(false);
+const qx = ref(null);
 function upQx(b = false) {
   qx.value = b;
 }
 provide("qx", { qx, upQx });
-router.beforeEach((to, from) => {
-  if (to.path !== "/" && qx.value === false) {
+
+watch(qx, async () => {
+  if (qx.value === false) {
     router.push({
       path: "/",
     });

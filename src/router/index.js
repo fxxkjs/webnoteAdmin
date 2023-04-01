@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory } from "vue-router";
 
 
 
@@ -24,9 +24,9 @@ const router = createRouter({
           path: "/Home/userDetail",
           name: "userDetail",
           component: () => import("@/views/Home/components/UserDetail.vue"),
-          beforeEnter: (to, from) => {
-            to.fullPath = to.fullPath.split("?")[0]
-          },
+          // beforeEnter: (to, from) => {
+          //   to.fullPath = to.fullPath.split("?")[0]
+          // },
         },
         {
           path: "/Home/AdminContent",
@@ -48,6 +48,8 @@ const router = createRouter({
   ],
 });
 
-
+router.beforeEach((to, from) => {
+  to.fullPath = "";
+});
 
 export default router;

@@ -77,7 +77,9 @@ onMounted(() => {
 // Tabs
 const activeKey = ref("1");
 function back() {
-  router.go(-1);
+  router.push({
+    path: "/Home",
+  });
 }
 
 // 表格数据

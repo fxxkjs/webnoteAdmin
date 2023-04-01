@@ -19,9 +19,9 @@ const handleClick = (e) => {
   router.push({ path: e.key });
 };
 
-router.beforeEach((to, from) => {
-  if (selectedKeys.value.length === 0) {
-    selectedKeys.value = [to.path];
-  }
-});
+// router.beforeEach((to, from) => {
+//   if (selectedKeys.value.length === 0) {
+//     selectedKeys.value = [to.path];
+//   }
+// });
 </script>

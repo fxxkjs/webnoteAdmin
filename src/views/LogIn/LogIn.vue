@@ -2,6 +2,7 @@
   <div id="bg">
     <div id="login">
       <a-form
+        id="from"
         class="form"
         :model="formState"
         name="basic"
@@ -65,6 +66,7 @@
         </a-form-item>
       </a-form>
     </div>
+    <img id="bgimg" src="https://cdn.webnote.fun/img/bg.jpg" @load="xxx" />
   </div>
 </template>
 
@@ -119,7 +121,7 @@ const mailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 function mailCode() {
   if (mailReg.test(formState.value.username)) {
     mailLoadimg.value = true;
-    getCode().then((req) => {
+    getCode(formState.value.username).then((req) => {
       if (req.data.code === 1) {
         mailShow.value = false;
         mailLoadimg.value = false;
@@ -132,16 +134,24 @@ function mailCode() {
     message.warning("邮箱格式错误", 5);
   }
 }
+function xxx(x) {
+  x.target.style.zIndex = 0;
+}
 </script>
 
 <style lang="less" scoped>
 #bg {
   width: 100%;
   height: 100%;
-  background-image: url("https://cdn.webnote.fun/img/bg.jpg");
+  background-image: url("https://cdn.webnote.fun/img/bg-mini.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+  position: relative;
+
+  #from {
+    z-index: 2;
+  }
   #login {
     width: 100%;
     height: 70%;
@@ -155,5 +165,18 @@ function mailCode() {
       padding: 30px 30px 0 30px;
     }
   }
+}
+
+#bgimg {
+  position: absolute;
+  top: 0;
+
+  max-width: 100%;
+  min-width: 100%;
+  max-height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  // transition: all 5s;
 }
 </style>

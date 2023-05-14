@@ -66,7 +66,7 @@
         </a-form-item>
       </a-form>
     </div>
-    <img id="bgimg" src="https://cdn.webnote.fun/img/bg.jpg" @load="xxx" />
+    <img id="bgimg" src="https://cdn.webnote.fun/img/bg.webp" @load="xxx" />
   </div>
 </template>
 
